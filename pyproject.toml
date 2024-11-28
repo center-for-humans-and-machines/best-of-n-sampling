@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+[project]
+name = "best_of_n"
+dynamic = ["version"]
+dependencies = [
+  "transformers",
+  "transformer_heads",
+  "fire"
+]
+requires-python = ">= 3.10"
+authors = [
+  {name = "Yannik Keller", email = "yannik@kelnet.de"},
+]
+description = "Value ranking"
+readme = "README.md"
+license = {text = "MIT License"}
+keywords = ["value ranking"]
+[tool.hatch.version]
+path = "best_of_n/__init__.py"
