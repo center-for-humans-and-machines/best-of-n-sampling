@@ -10,13 +10,20 @@ from ykutil import log, pad_along_dimension, removesuffixes
 
 
 @torch.inference_mode()
-def value_rank(
+def _value_rank(
     model: HeadedModel,
     context: torch.Tensor | list,
     completions: list[torch.Tensor | list],
     batch_size: int = 4,
 ):
-    pass
+    context = torch.tensor(context).to(model.device)
+    completions = [torch.tensor(x).to(model.device) for x in completions]
+    completions = pad_along_dimension(
+        completions, dim=0, pad_value=model.config.pad_token_id
+    )
+    completed = torch.cat(
+        [context.unsqueeze(0).repeat(len(completions), 1), completions]
+    )
 
 
 def _sample_best_of_n(
