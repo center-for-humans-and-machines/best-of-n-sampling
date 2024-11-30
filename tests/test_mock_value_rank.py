@@ -1,9 +1,8 @@
 import fire
-from accelerate import Accelerator
 from mock_model import MockModel
-from transformers import AutoTokenizer, GenerationConfig
+from transformers import AutoTokenizer
 
-from best_of_n import value_rank
+from best_of_n import value_rank_completions
 
 
 def test_without_accelerator(device="cpu"):
@@ -13,7 +12,7 @@ def test_without_accelerator(device="cpu"):
     inputs = tk.encode("A car is ", return_tensors="pt").to(model.device)
     completions = model.generate(inputs.repeat(12, 1)).sequences[:, inputs.size(1) :]
 
-    seq_and_val = value_rank(
+    seq_and_val = value_rank_completions(
         model,
         inputs,
         completions,

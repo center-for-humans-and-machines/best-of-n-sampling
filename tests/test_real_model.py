@@ -1,7 +1,6 @@
 import time
 
 import fire
-import torch
 from accelerate import Accelerator
 from transformer_heads import load_lora_with_heads, load_tokenizer
 from transformers import (
