@@ -1,5 +1,5 @@
 # Best of n sampling (Value Ranking)
-Best-of-n sampling, also known as value ranking incorporates a value function into the process of selecting an action or completion from an LLM.
+Best-of-n sampling, also known as value ranking, incorporates a value function into the process of selecting an action or completion from an LLM.
 In a given situation, n possible completions are generated and ranked using a value function. Only the completion with highest predicted value
 is then actually chosen.
 
