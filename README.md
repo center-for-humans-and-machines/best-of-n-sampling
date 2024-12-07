@@ -1,12 +1,12 @@
 # Best of n sampling (Value Ranking)
-Best-of-n sampling, also known as value ranking incorporates a value function into the process of selecting an action or completion from an LLM.
+Best-of-n sampling, also known as value ranking, incorporates a value function into the process of selecting an action or completion from an LLM.
 In a given situation, n possible completions are generated and ranked using a value function. Only the completion with highest predicted value
 is then actually chosen.
 
 In situations such as game, in which an optimization of LLM generations towards the outcome of the game is desired, best-of-n sampling is commonly chosen
 instead of reinforcement learning due to it's much lower implementational and computational footprint.
 
-While there are other implementations out there ([trl](https://github.com/huggingface/trl/blob/148b5923135e6eaa1e1dfd2c53ce45b274ec3127/trl/extras/best_of_n_sampler.py)), this implementation works natively with multiple gpus (using accelerate) and build on [transformer_heads](git@github.com:center-for-humans-and-machines/transformer-heads.git)
+While there are other implementations out there ([trl](https://github.com/huggingface/trl/blob/148b5923135e6eaa1e1dfd2c53ce45b274ec3127/trl/extras/best_of_n_sampler.py)), this implementation works natively with multiple gpus (using accelerate) and builds on [transformer_heads](git@github.com:center-for-humans-and-machines/transformer-heads.git)
 
 ## Installation
 1. Clone this repository
