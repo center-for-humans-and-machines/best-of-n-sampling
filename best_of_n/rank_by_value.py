@@ -9,6 +9,7 @@ from ykutil import (
 )
 
 from best_of_n.util import get_seq_and_val
+from transformers import AutoTokenizer
 
 
 @torch.inference_mode()
@@ -23,7 +24,9 @@ def _value_rank(
     if context.dim() == 1:
         context = context.unsqueeze(0)
 
-    completed = torch.cat([context.repeat(len(completions), 1), completions], dim=1)
+    completed = torch.cat(
+        [context.repeat(len(completions), 1), completions], dim=1
+    ).int()
 
     all_values = []
 
@@ -46,6 +49,7 @@ def value_rank_completions(
     batch_size: int = 4,
     head_name: str = "value_head",
     accelerator: Optional[accelerate.Accelerator] = None,
+    strategy: str = "last",
 ) -> list[tuple[list[int], float]]:
     """Use a value model to rank a list of completions.
 
@@ -82,12 +86,16 @@ def value_rank_completions(
         head_name=head_name,
     )
 
-    if accelerator is None:
-        values = values
-    else:
+    if accelerator is not None:
         values = accelerator.pad_across_processes(values, dim=1, pad_index=0)
         values = accelerator.gather(values)
 
         accelerator.wait_for_everyone()
 
-    return get_seq_and_val(completions, values, pad_token_id)
+    return get_seq_and_val(
+        completions,
+        values,
+        pad_token_id,
+        strategy=strategy,
+        input_length=len(context) if isinstance(context, list) else context.size(-1),
+    )

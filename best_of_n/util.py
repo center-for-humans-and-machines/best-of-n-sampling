@@ -3,7 +3,11 @@ from ykutil import removesuffixes
 
 
 def get_seq_and_val(
-    sequences: torch.Tensor, values: torch.Tensor, pad_token_id: int
+    sequences: torch.Tensor,
+    values: torch.Tensor,
+    pad_token_id: int,
+    strategy="last",
+    input_length=None,
 ) -> list[tuple[list[int], float]]:
     """Removes all padding from sequences, extracts the value from the last token, and sorts by value.
 
@@ -20,7 +24,15 @@ def get_seq_and_val(
     for seq, val in zip(sequences, values):
         seq.detach().cpu()
         short_seq = removesuffixes(seq.tolist(), (pad_token_id,))
-        one_val = float(val[len(short_seq) - 1])
+        if strategy == "last":
+            one_val = float(val[len(short_seq) - 1])
+        elif strategy == "mean":
+            assert (
+                input_length is not None
+            ), "input_length must be provided for mean strategy"
+            one_val = float(val[len(short_seq) - input_length :].mean())
+        else:
+            raise ValueError(f"Unknown strategy: {strategy}")
         seq_and_val.append((short_seq, one_val))
 
     seq_and_val.sort(key=lambda x: x[1], reverse=True)

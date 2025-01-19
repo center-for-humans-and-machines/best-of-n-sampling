@@ -51,10 +51,11 @@ def _sample_best_of_n(
         else:
             out_seq = outputs
         sequences.append(out_seq[:, use_input_ids.size(1) :])
-        if (
-            isinstance(outputs, HeadedModelGenerateOutput)
-            and value_head_name in outputs.head_outputs
-        ):
+        if value_func is None:
+            assert (
+                isinstance(outputs, HeadedModelGenerateOutput)
+                and value_head_name in outputs.head_outputs
+            )
             values.append(outputs.head_outputs[value_head_name].squeeze(-1))
         else:
             assert value_func is not None
